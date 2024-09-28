@@ -4,7 +4,7 @@ pipeline {
     agent any
     environment {
         // Definir una variable sonarenv
-        sonarenv = 'Sonar Local'
+        sonarenv = 'localhost:9000'
     }
     stages {
         stage('Análisis estático') {
