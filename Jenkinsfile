@@ -2,6 +2,10 @@
 
 pipeline {
     agent any
+    tools {
+        // Nombre que definiste en la configuración global de SonarQube Scanner
+        sonarQube 'Sonar Local'
+    }
     environment {
         // Definir una variable sonarenv
         sonarenv = 'http://localhost:9000'
