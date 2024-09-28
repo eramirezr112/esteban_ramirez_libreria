@@ -4,6 +4,7 @@ def call(Map config) {
         // Accede a los parámetros del mapa usando config.<clave>
         boolean abortOnQualityGate = config.get('abortOnQualityGate', false) // Valor por defecto: false
         boolean abortPipeline = config.get('abortPipeline', false) // Valor por defecto: true    
+        String gitBranch = env.GIT_BRANCH
         
         timeout(time: 5, unit: 'MINUTES') {
             // Manteniendo el sonarenv para asegurar compatibilidad futura si es necesario
@@ -17,14 +18,28 @@ def call(Map config) {
                 def qualityGateStatus = 'OK' // O cambiar a 'ERROR' si quieres probar el flujo de fallo
                 echo "Resultado del QualityGate simulado: ${qualityGateStatus}"
 
-                // Evalúa el resultado del QualityGate
-                if (qualityGateStatus != 'OK' && abortOnQualityGate) {
-                    error "El QualityGate no ha pasado. Abortando el pipeline."
-                } else if (qualityGateStatus != 'OK') {
-                    echo "El QualityGate no ha pasado, pero el pipeline continuará."
+                // Heurística para determinar si se debe cortar el pipeline según la rama
+                if (abortOnQualityGate) {
+                    echo "abortOnQualityGate es true, se cortará el pipeline si el QualityGate falla."
+                    if (qualityGateStatus != 'OK') {
+                        error "El QualityGate no ha pasado. Abortando el pipeline."
+                    }
                 } else {
-                    echo "El QualityGate ha pasado exitosamente."
+                    echo "Evaluando nombre de la rama: ${gitBranch}"
+                    
+                    if (qualityGateStatus != 'OK') {
+                        if (gitBranch == 'main') {
+                            error "El QualityGate ha fallado en la rama master. Abortando el pipeline."
+                        } else if (gitBranch.startsWith('hotfix')) {
+                            error "El QualityGate ha fallado en una rama hotfix. Abortando el pipeline."
+                        } else {
+                            echo "El QualityGate ha fallado, pero no se abortará porque la rama no es master ni hotfix."
+                        }
+                    } else {
+                        echo "El QualityGate ha pasado exitosamente."
+                    }
                 }
+            
             
         }
 
