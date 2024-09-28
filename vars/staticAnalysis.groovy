@@ -1,6 +1,11 @@
-def call(boolean abortOnQualityGate = false, boolean abortPipeline = false) {
+def call(Map config) {    
     // Realiza el análisis estático de código
     try {
+
+        // Accede a los parámetros del mapa usando config.<clave>
+        boolean abortOnQualityGate = config.get('abortOnQualityGate', false) // Valor por defecto: false
+        boolean abortPipeline = config.get('abortPipeline', false) // Valor por defecto: true        
+        
         timeout(time: 5, unit: 'MINUTES') {
             // Supongamos que aquí se ejecuta el análisis estático, por ejemplo con SonarQube
             echo "Iniciando análisis estático de código..."
