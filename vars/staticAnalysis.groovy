@@ -7,7 +7,7 @@ def call(Map config) {
         
         timeout(time: 5, unit: 'MINUTES') {
             // Manteniendo el sonarenv para asegurar compatibilidad futura si es necesario
-            withSonarQubeEnv('SonarQube-Server') {
+            
                 echo "Iniciando pruebas de calidad de código..."
                 
                 // Simulación de ejecución de pruebas de calidad de código
@@ -25,7 +25,7 @@ def call(Map config) {
                 } else {
                     echo "El QualityGate ha pasado exitosamente."
                 }
-            }
+            
         }
 
         // Verificar el parámetro abortPipeline
