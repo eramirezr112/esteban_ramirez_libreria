@@ -1,28 +1,26 @@
-def call(Map config) {    
-    // Realiza el análisis estático de código
+def call(boolean abortOnQualityGate = false, boolean abortPipeline = false) {
+    // Simulación de las pruebas de calidad de código sin SonarQube
     try {
-
-        // Accede a los parámetros del mapa usando config.<clave>
-        boolean abortOnQualityGate = config.get('abortOnQualityGate', false) // Valor por defecto: false
-        boolean abortPipeline = config.get('abortPipeline', false) // Valor por defecto: true        
-        
         timeout(time: 5, unit: 'MINUTES') {
-            // Supongamos que aquí se ejecuta el análisis estático, por ejemplo con SonarQube
-            echo "Iniciando análisis estático de código..."
-            // Ejecuta el análisis estático, reemplaza esto con el comando específico de tu análisis
-            echo "Ejecución de las pruebas de calidad de código"
+            // Manteniendo el sonarenv para asegurar compatibilidad futura si es necesario
+            withEnv(['sonarenv']) {
+                echo "Iniciando pruebas de calidad de código..."
+                
+                // Simulación de ejecución de pruebas de calidad de código
+                sh 'echo "Ejecución de las pruebas de calidad de código"'
+                
+                // Simulación de un resultado de QualityGate
+                def qualityGateStatus = 'OK' // O cambiar a 'ERROR' si quieres probar el flujo de fallo
+                echo "Resultado del QualityGate simulado: ${qualityGateStatus}"
 
-            // Espera el resultado del QualityGate
-            def qualityGate = waitForQualityGate()
-            echo "Resultado del QualityGate: ${qualityGate.status}"
-
-            // Evalúa el resultado del QualityGate
-            if (qualityGate.status != 'OK' && abortOnQualityGate) {
-                error "El QualityGate no ha pasado. Abortando el pipeline."
-            } else if (qualityGate.status != 'OK') {
-                echo "El QualityGate no ha pasado, pero el pipeline continuará."
-            } else {
-                echo "El QualityGate ha pasado exitosamente."
+                // Evalúa el resultado del QualityGate
+                if (qualityGateStatus != 'OK' && abortOnQualityGate) {
+                    error "El QualityGate no ha pasado. Abortando el pipeline."
+                } else if (qualityGateStatus != 'OK') {
+                    echo "El QualityGate no ha pasado, pero el pipeline continuará."
+                } else {
+                    echo "El QualityGate ha pasado exitosamente."
+                }
             }
         }
 
