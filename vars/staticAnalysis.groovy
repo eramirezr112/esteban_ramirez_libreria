@@ -1,6 +1,10 @@
-def call(boolean abortOnQualityGate = false, boolean abortPipeline = false) {
+def call(Map config) {
     // Simulación de las pruebas de calidad de código sin SonarQube
     try {
+        // Accede a los parámetros del mapa usando config.<clave>
+        boolean abortOnQualityGate = config.get('abortOnQualityGate', false) // Valor por defecto: false
+        boolean abortPipeline = config.get('abortPipeline', false) // Valor por defecto: true    
+        
         timeout(time: 5, unit: 'MINUTES') {
             // Manteniendo el sonarenv para asegurar compatibilidad futura si es necesario
             withEnv(['sonarenv']) {
