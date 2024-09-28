@@ -10,7 +10,7 @@ def call(Map config) {
             // Supongamos que aquí se ejecuta el análisis estático, por ejemplo con SonarQube
             echo "Iniciando análisis estático de código..."
             // Ejecuta el análisis estático, reemplaza esto con el comando específico de tu análisis
-            sh 'Ejecución de las pruebas de calidad de código'
+            echo "Ejecución de las pruebas de calidad de código"
 
             // Espera el resultado del QualityGate
             def qualityGate = waitForQualityGate()
