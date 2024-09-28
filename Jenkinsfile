@@ -3,8 +3,7 @@
 pipeline {
     agent any
     environment {
-        // Definir una variable sonarenv
-        sonarenv = 'http://localhost:9000'
+        GIT_BRANCH = "${env.BRANCH_NAME}"  // Asegúrate de que la variable de entorno contenga el nombre de la rama
     }
     stages {
         stage('Análisis estático') {
